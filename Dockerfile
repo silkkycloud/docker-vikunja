@@ -33,7 +33,7 @@ FROM alpine:3.14
 ENV VIKUNJA_SERVICE_ROOTPATH=/vikunja/
 
 RUN apk add --no-cache \
-    ca-certficates \
+    ca-certificates \
     tini \
     shadow \
     tzdata
