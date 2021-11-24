@@ -1,0 +1,16 @@
+:80 {
+	@50x {
+		expression {http.error.status_code} in [500, 502, 503, 504]
+	}
+
+	root * /usr/share/caddy
+
+	encode gzip
+
+	file_server
+
+	handle_errors {
+		rewrite @50x /50x.html
+		file_server
+	}
+}

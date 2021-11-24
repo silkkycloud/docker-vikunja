@@ -1,0 +1,38 @@
+####################################################################################################
+## Builder
+####################################################################################################
+FROM node:16-alpine AS builder
+
+ENV YARN_CACHE_FOLDER .cache/yarn/
+
+RUN apk add --no-cache \
+    ca-certficates \
+    git
+
+RUN --mount=type=cache,target=/tmp/git_cache \
+    git clone https://kolaente.dev/vikunja/frontend.git /tmp/git_cache/vikunja-frontend; \
+    cd /tmp/git_cache/vikunja-frontend \
+    && git pull \
+    && cp -r ./ /tmp/vikunja-frontend
+
+WORKDIR /vikunja
+
+RUN cp -r /tmp/vikunja-frontend/. /vikunja/. \
+    && rm -rf /tmp/vikunja-frontend
+
+# Build Vikunja frontend
+RUN yarn install --frozen-lockfile --network-timeout 100000 \
+    && echo '{"VERSION": "'$(git describe --tags --always --abbrev=10 | sed 's/-/+/' | sed 's/^v//' | sed 's/-g/-/')'"}' > src/version.json \
+    && yarn run build
+
+####################################################################################################
+## Final image
+####################################################################################################
+FROM caddy:2-alpine
+
+COPY --from=builder /vikunja/dist /usr/share/caddy
+COPY ./Caddyfile /etc/caddy/Caddyfile
+
+COPY ./start-frontend.sh /start-frontend.sh
+
+CMD ["/start-frontend.sh"]
