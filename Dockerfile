@@ -6,7 +6,7 @@ FROM golang:1-alpine AS builder
 ENV GO111MODULE=on
 
 RUN apk add --no-cache \
-    ca-certficates \
+    ca-certificates \
     build-base \
     git
 

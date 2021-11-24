@@ -6,7 +6,7 @@ FROM node:16-alpine AS builder
 ENV YARN_CACHE_FOLDER .cache/yarn/
 
 RUN apk add --no-cache \
-    ca-certficates \
+    ca-certificates \
     git
 
 RUN --mount=type=cache,target=/tmp/git_cache \
