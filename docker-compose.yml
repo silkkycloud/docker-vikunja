@@ -3,10 +3,94 @@ version: '3.8'
 services:
 
   api:
+    image: ghcr.io/silkkycloud/vikunja:latest
+    hostname: vikunja
+    networks:
+      - backend
+      - public
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints:
+          - "node.hostname == main-2"
+      resources:
+        limits:
+          cpus: '2'
+          memory: 3G
+        reservations:
+          cpus: '0.2'
+          memory: 256M
+    volumes:
+      - data:/vikunja/files
+    environment:
+      # Database
+      - VIKUNJA_DATABASE_TYPE=mysql
+      - VIKUNJA_DATABASE_HOST=mariadb
+      - VIKUNJA_DATABASE_DATABASE=vikunja
+      - VIKUNJA_DATABASE_USER=vikunja
+      - VIKUNJA_DATABASE_PASSWORD=${MARIADB_PASSWORD}
+      # Mailer
+      - VIKUNJA_MAILER_ENABLED=true
+      - VIKUNJA_MAILER_HOST=${MAILER_HOST}
+      - VIKUNJA_MAILER_PORT=${MAILER_PORT}
+      - VIKUNJA_MAILER_FROMEMAIL=${MAILER_FROM_ADDRESS}
+      - VIKUNJA_MAILER_USERNAME=${MAILER_USERNAME}
+      - VIKUNJA_MAILER_PASSWORD=${MAILER_PASSWORD}
+      # Service
+      - VIKUNJA_SERVICE_JWT_SECRET=${SERVICE_JWT_SECRET}
+      - VIKUNJA_SERVICE_FRONTENDURL=${SERVICE_FRONTEND_URL}
+      # Legal
+      - VIKUNJA_LEGAL_PRIVACYURL=https://www.silkky.cloud/privacy
+      # Metrics
+      - VIKUNJA_METRICS_ENABLED=true
 
   web:
+    image: ghcr.io/silkkycloud/vikunja-frontend:latest
+    hostname: vikunja-web
+    networks:
+      - backend
+      - public
+    deploy:
+      mode: replicated
+      replicas: 2
+      placement:
+        constraints:
+          - "node.hostname == main-2"
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+        reservations:
+          cpus: '0.1'
+          memory: 128M
 
   mariadb:
+    image: mariadb:10.7
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    hostname: mariadb
+    networks:
+      - backend
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints:
+          - "node.hostname == main-2"
+      resources:
+        limits:
+          cpus: '1'
+          memory: 4G
+        reservations:
+          cpus: '0.2'
+          memory: 512M
+    volumes:
+      - database:/var/lib/mysql
+    environment:
+      - MYSQL_DATABASE=vikunja
+      - MYSQL_USER=vikunja
+      - MYSQL_PASSWORD=${MARIADB_PASSWORD}
+      - MYSQL_ROOT_PASSWORD=${MARIADB_ROOT_PASSWORD}
 
 networks:
   public:
