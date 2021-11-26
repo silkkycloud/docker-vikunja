@@ -38,7 +38,7 @@ jobs:
           context: .
           file: ./Dockerfile
           push: true
-          tags: ghcr.io/silkkycloud/vikunja:latest
+          tags: ghcr.io/silkkycloud/vikunja:latest,ghcr.io/silkkycloud/vikunja:0.18.1
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache-new
       - name: Move Cache

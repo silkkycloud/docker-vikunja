@@ -3,7 +3,7 @@ version: '3.8'
 services:
 
   api:
-    image: ghcr.io/silkkycloud/vikunja:latest
+    image: ghcr.io/silkkycloud/vikunja:0.18.1
     hostname: vikunja
     networks:
       - backend
