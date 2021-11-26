@@ -10,6 +10,7 @@
 	file_server
 
 	handle_errors {
+		root * /usr/share/caddy
 		rewrite @50x /50x.html
 		file_server
 	}
