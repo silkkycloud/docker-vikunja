@@ -33,6 +33,7 @@ FROM caddy:2-alpine
 COPY --from=builder /vikunja/dist /usr/share/caddy
 COPY ./Caddyfile /etc/caddy/Caddyfile
 
-COPY ./start-frontend.sh /start-frontend.sh
+COPY ./start-frontend.sh /start.sh
+RUN chmod +x /start.sh
 
-CMD ["/start-frontend.sh"]
+CMD ["/start.sh"]
