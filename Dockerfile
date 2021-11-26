@@ -45,6 +45,10 @@ COPY --from=builder /vikunja /vikunja
 RUN adduser --disabled-password --gecos "" --no-create-home vikunja \
     && chown -R vikunja:vikunja /vikunja
 
+# Make persistant data directory
+RUN mkdir -p /vikunja/files \
+    && chown -R vikunja:vikunja /vikunja/files
+
 ENTRYPOINT ["/sbin/tini", "--"]
 
 USER vikunja

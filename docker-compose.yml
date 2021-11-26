@@ -10,9 +10,6 @@ services:
       - public
     deploy:
       mode: replicated
-      labels:
-        prometheus-job: vikunja
-        prometheus-port: 3456
       replicas: 1
       placement:
         constraints:
@@ -36,12 +33,6 @@ services:
       - VIKUNJA_DATABASE_DATABASE=vikunja
       - VIKUNJA_DATABASE_USER=vikunja
       - VIKUNJA_DATABASE_PASSWORD=${MARIADB_PASSWORD}
-      # Redis
-      - VIKUNJA_CACHE_ENABLED=true
-      - VIKUNJA_CACHE_TYPE=redis
-      - VIKUNJA_REDIS_ENABLED=true
-      - VIKUNJA_REDIS_HOST=redis:6379
-      - VIKUNJA_KEYVALUE_TYPE=redis
       # Mailer
       - VIKUNJA_MAILER_ENABLED=true
       - VIKUNJA_MAILER_HOST=${MAILER_HOST}
@@ -54,8 +45,6 @@ services:
       - VIKUNJA_SERVICE_FRONTENDURL=${SERVICE_FRONTEND_URL}
       # Legal
       - VIKUNJA_LEGAL_PRIVACYURL=https://www.silkky.cloud/privacy
-      # Metrics
-      - VIKUNJA_METRICS_ENABLED=true
 
   web:
     image: vikunja/frontend:0.18.2
@@ -106,27 +95,6 @@ services:
       - MYSQL_PASSWORD=${MARIADB_PASSWORD}
       - MYSQL_ROOT_PASSWORD=${MARIADB_ROOT_PASSWORD}
 
-  redis:
-    image: redis:6.2.6-alpine
-    hostname: redis
-    networks:
-      - backend
-    deploy:
-      mode: replicated
-      replicas: 1
-      placement:
-        constraints:
-          - "node.hostname == main-2"
-      resources:
-        limits:
-          cpus: '0.5'
-          memory: 512M
-        reservations:
-          cpus: '0.1'
-          memory: 50M
-    volumes:
-      - redis_database:/data
-
 networks:
   public:
     external: true
@@ -140,5 +108,4 @@ networks:
 
 volumes:
   database:
-  redis_database:
   data:
