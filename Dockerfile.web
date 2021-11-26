@@ -10,8 +10,9 @@ RUN apk add --no-cache \
     git
 
 RUN --mount=type=cache,target=/tmp/git_cache \
-    git clone --branch v0.18.2 https://kolaente.dev/vikunja/frontend.git /tmp/git_cache/vikunja-frontend; \
+    git clone https://kolaente.dev/vikunja/frontend.git /tmp/git_cache/vikunja-frontend; \
     cd /tmp/git_cache/vikunja-frontend \
+    && git checkout v0.18.2 \
     && git pull \
     && cp -r ./ /tmp/vikunja-frontend
 
