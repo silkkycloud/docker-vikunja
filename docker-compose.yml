@@ -40,7 +40,7 @@ services:
       - VIKUNJA_CACHE_ENABLED=true
       - VIKUNJA_CACHE_TYPE=redis
       - VIKUNJA_REDIS_ENABLED=true
-      - VIKUNJA_REDIS_HOST=redis
+      - VIKUNJA_REDIS_HOST=redis:6379
       - VIKUNJA_KEYVALUE_TYPE=redis
       # Mailer
       - VIKUNJA_MAILER_ENABLED=true
