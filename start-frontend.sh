@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 VIKUNJA_API_URL="${VIKUNJA_API_URL:-"https://tasks.silkky.cloud/api/v1"}"
 
