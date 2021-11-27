@@ -11,6 +11,11 @@ RUN apk add --no-cache \
     git \
     tar
 
+# Install Mage
+RUN go get -u -d github.com/magefile/mage \
+    && cd $GOPATH/src/github.com/magefile/mage \
+    && go run bootstrap.go
+
 WORKDIR /vikunja
 
 ADD https://kolaente.dev/vikunja/api/archive/v0.18.1.tar.gz /tmp/vikunja.tar.gz
@@ -18,8 +23,7 @@ RUN tar xvfz /tmp/vikunja.tar.gz -C /tmp \
     && cp -r /tmp/api/. /vikunja
 
 # Build Vikunja
-RUN go install github.com/magefile/mage \
-    && mage build:clean build
+RUN mage build:clean build
 
 ####################################################################################################
 ## Final image
