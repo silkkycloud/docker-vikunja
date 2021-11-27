@@ -18,9 +18,9 @@ RUN git clone https://github.com/magefile/mage \
 
 WORKDIR /vikunja
 
-ADD https://kolaente.dev/vikunja/api/archive/v0.18.1.tar.gz /tmp/vikunja.tar.gz
-RUN tar xvfz /tmp/vikunja.tar.gz -C /tmp \
-    && cp -r /tmp/api/. /vikunja
+RUN --mount=type=cache,target=/tmp/git_cache \
+    git clone --depth 1 --branch v0.18.1 https://kolaente.dev/vikunja/api.git /tmp/git_cache/vikunja; \ 
+    && cp -r /tmp/git_cache/vikunja/. /vikunja
 
 # Build Vikunja
 RUN mage build:clean build
