@@ -8,17 +8,13 @@ ENV GO111MODULE=on
 RUN apk add --no-cache \
     ca-certificates \
     build-base \
-    git
-
-RUN --mount=type=cache,target=/tmp/git_cache \
-    git clone --depth 1 --branch v0.18.1 https://kolaente.dev/vikunja/api.git /tmp/git_cache/vikunja; \
-    cd /tmp/git_cache/vikunja \ 
-    && cp -r ./ /tmp/vikunja
+    tar
 
 WORKDIR /vikunja
 
-RUN cp -r /tmp/vikunja/. /vikunja/. \
-    && rm -rf /tmp/vikunja
+ADD https://kolaente.dev/vikunja/api/archive/v0.18.1.tar.gz /tmp/vikunja.tar.gz
+RUN tar xvfz /tmp/vikunja.tar.gz -C /tmp \
+    && cp -r /tmp/api/. /vikunja
 
 # Build Vikunja
 RUN go install github.com/magefile/mage \
@@ -45,7 +41,7 @@ COPY --from=builder /vikunja /vikunja
 RUN adduser --disabled-password --gecos "" --no-create-home vikunja \
     && chown -R vikunja:vikunja /vikunja
 
-# Make persistant data directory
+# Make persistent data directory
 RUN mkdir -p /vikunja/files \
     && chown -R vikunja:vikunja /vikunja/files
 
