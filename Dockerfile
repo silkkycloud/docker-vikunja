@@ -8,6 +8,7 @@ ENV GO111MODULE=on
 RUN apk add --no-cache \
     ca-certificates \
     build-base \
+    git \
     tar
 
 WORKDIR /vikunja
