@@ -12,8 +12,8 @@ RUN apk add --no-cache \
     tar
 
 # Install Mage
-RUN go get -u -d github.com/magefile/mage \
-    && cd $GOPATH/src/github.com/magefile/mage \
+RUN git clone https://github.com/magefile/mage \
+    && cd mage \
     && go run bootstrap.go
 
 WORKDIR /vikunja
