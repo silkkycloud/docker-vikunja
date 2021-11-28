@@ -1,7 +1,11 @@
+ARG VIKUNJA_VERSION=0.18.1
+
 ####################################################################################################
 ## Builder
 ####################################################################################################
 FROM golang:1-alpine AS builder
+
+ARG VIKUNJA_VERSION
 
 ENV GO111MODULE=on
 
@@ -18,7 +22,7 @@ RUN git clone https://github.com/magefile/mage \
 
 WORKDIR /vikunja
 
-RUN git clone --depth 1 --branch v0.18.1 https://kolaente.dev/vikunja/api.git /tmp/vikunja \ 
+RUN git clone --depth 1 --branch v${VIKUNJA_VERSION} https://kolaente.dev/vikunja/api.git /tmp/vikunja \ 
     && cp -r /tmp/vikunja/. /vikunja
 
 # Build Vikunja
