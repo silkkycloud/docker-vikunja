@@ -42,7 +42,7 @@ services:
       - VIKUNJA_MAILER_PASSWORD=${MAILER_PASSWORD}
       # Service
       - VIKUNJA_SERVICE_JWT_SECRET=${SERVICE_JWT_SECRET}
-      - VIKUNJA_SERVICE_FRONTENDURL=${SERVICE_FRONTEND_URL}
+      - VIKUNJA_SERVICE_FRONTENDURL=https://${SERVICE_HOSTNAME}
       # Legal
       - VIKUNJA_LEGAL_PRIVACYURL=https://www.silkky.cloud/privacy
 
@@ -66,7 +66,7 @@ services:
           cpus: '0.1'
           memory: 128M
     environment:
-      - VIKUNJA_API_URL=https://tasks.silkky.cloud/api/v1
+      - VIKUNJA_API_URL=https://${SERVICE_HOSTNAME}/api/v1
 
   mariadb:
     image: mariadb:10.7
