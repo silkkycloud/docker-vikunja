@@ -6,6 +6,7 @@ services:
     image: ghcr.io/silkkycloud/vikunja:0.18.1
     hostname: vikunja
     networks:
+      - metrics_net
       - backend
       - public
     deploy:
@@ -24,6 +25,9 @@ services:
         reservations:
           cpus: '0.2'
           memory: 256M
+      labels:
+        prometheus-job: vikunja
+        prometheus-port: 3456
     volumes:
       - data:/vikunja/files
     environment:
@@ -45,6 +49,8 @@ services:
       - VIKUNJA_SERVICE_FRONTENDURL=https://${SERVICE_HOSTNAME}/
       # Legal
       - VIKUNJA_LEGAL_PRIVACYURL=https://www.silkky.cloud/privacy
+      # Prometheus
+      - VIKUNJA_METRICS_ENABLED=true
 
   web:
     image: vikunja/frontend:0.18.2
@@ -97,6 +103,8 @@ services:
 
 networks:
   public:
+    external: true
+  metrics_net:
     external: true
 
   backend:
