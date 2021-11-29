@@ -28,6 +28,7 @@ services:
       labels:
         prometheus-job: vikunja
         prometheus-port: 3456
+        prometheus-path: /api/v1/metrics
     volumes:
       - data:/vikunja/files
     environment:
