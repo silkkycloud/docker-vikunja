@@ -33,6 +33,7 @@ RUN mage build:clean build
 ####################################################################################################
 FROM alpine:3.15
 
+ARG VIKUNJA_VERSION
 ENV VIKUNJA_SERVICE_ROOTPATH=/vikunja/
 
 RUN apk add --no-cache \
@@ -70,3 +71,12 @@ HEALTHCHECK \
     --interval=1m \
     --timeout=5s \
     CMD wget --spider --q http://localhost:3456/api/v1/info || exit 1
+
+# Image metadata
+LABEL org.opencontainers.image.version=${VIKUNJA_VERSION}
+LABEL org.opencontainers.image.title=Vikunja
+LABEL org.opencontainers.image.description="The to-do app to organize your life. Vikunja is an open-source, self-hosted to-do list application for all platforms."
+LABEL org.opencontainers.image.url=https://tasks.silkky.cloud
+LABEL org.opencontainers.image.vendor="Silkky.Cloud"
+LABEL org.opencontainers.image.licenses=Unlicense
+LABEL org.opencontainers.image.source="https://github.com/silkkycloud/docker-vikunja"
