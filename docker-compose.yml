@@ -26,9 +26,19 @@ services:
           cpus: '0.2'
           memory: 256M
       labels:
-        prometheus-job: vikunja
-        prometheus-port: 3456
-        prometheus-path: /api/v1/metrics
+        # Prometheus
+        - "prometheus-job=vikunja"
+        - "prometheus-port=3456"
+        - "prometheus-path=/api/v1/metrics"
+        # Traefik
+        - "traefik.enable=true"
+        # Router
+        - "traefik.http.routers.vikunja.rule=Host(`${HOSTNAME}`) && PathPrefix(`/api/`, `/dav/`, `/.well-known/`)"
+        - "traefik.http.routers.vikunja.entrypoints=websecure"
+        - "traefik.http.routers.vikunja.tls=true"
+        - "traefik.http.routers.vikunja.service=vikunja-service"
+        # Service
+        - "traefik.http.services.vikunja-service.loadbalancer.server.port=3456"
     volumes:
       - data:/vikunja/files
     environment:
@@ -47,7 +57,7 @@ services:
       - VIKUNJA_MAILER_PASSWORD=${MAILER_PASSWORD}
       # Service
       - VIKUNJA_SERVICE_JWTSECRET=${SERVICE_JWT_SECRET}
-      - VIKUNJA_SERVICE_FRONTENDURL=https://${SERVICE_HOSTNAME}/
+      - VIKUNJA_SERVICE_FRONTENDURL=https://${HOSTNAME}/
       # Legal
       - VIKUNJA_LEGAL_PRIVACYURL=https://www.silkky.cloud/privacy
       # Prometheus
@@ -72,8 +82,21 @@ services:
         reservations:
           cpus: '0.1'
           memory: 128M
+      labels:
+        # Traefik
+        - "traefik.enable=true"
+        # Router
+        - "traefik.http.routers.vikunja-frontend.rule=Host(`${HOSTNAME}`)"
+        - "traefik.http.routers.vikunja-frontend.entrypoints=websecure"
+        - "traefik.http.routers.vikunja-frontend.tls=true"
+        - "traefik.http.routers.vikunja-frontend.service=vikunja-frontend-service"
+        # Service
+        - "traefik.http.services.vikunja-frontend-service.loadbalancer.server.port=80"
+        - "traefik.http.services.vikunja-frontend-service.loadbalancer.sticky.cookie=true"
+        - "traefik.http.services.vikunja-frontend-service.loadbalancer.sticky.cookie.secure=true"
+        - "traefik.http.services.vikunja-frontend-service.loadbalancer.sticky.cookie.samesite=strict"
     environment:
-      - VIKUNJA_API_URL=https://${SERVICE_HOSTNAME}/api/v1
+      - VIKUNJA_API_URL=https://${HOSTNAME}/api/v1
 
   mariadb:
     image: mariadb:10.7
