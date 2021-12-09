@@ -33,7 +33,7 @@ services:
         # Traefik
         - "traefik.enable=true"
         # Router
-        - "traefik.http.routers.vikunja.rule=Host(`${HOSTNAME}`) && PathPrefix(`/api/`, `/dav/`, `/.well-known/`)"
+        - "traefik.http.routers.vikunja.rule=Host(`${HOSTNAME}`) && PathPrefix(`/api`, `/dav`, `/.well-known`)"
         - "traefik.http.routers.vikunja.entrypoints=websecure"
         - "traefik.http.routers.vikunja.tls=true"
         - "traefik.http.routers.vikunja.service=vikunja-service"
