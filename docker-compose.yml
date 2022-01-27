@@ -92,7 +92,7 @@ services:
         - "traefik.http.routers.vikunja-frontend.rule=Host(`${HOSTNAME}`)"
         - "traefik.http.routers.vikunja-frontend.entrypoints=websecure"
         - "traefik.http.routers.vikunja-frontend.tls=true"
-        - "traefik.http.routers.vikunja-frontend.middlewares.vikunja-frontend-headers"
+        - "traefik.http.routers.vikunja-frontend.middlewares=vikunja-frontend-headers"
         - "traefik.http.routers.vikunja-frontend.service=vikunja-frontend-service"
         # Middleware
         - "traefik.http.middlewares.vikunja-frontend-headers.headers.framedeny=true"
